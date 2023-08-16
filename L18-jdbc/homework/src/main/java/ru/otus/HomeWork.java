@@ -10,9 +10,11 @@ import ru.otus.crm.model.Client;
 import ru.otus.crm.model.Manager;
 import ru.otus.crm.service.DbServiceClientImpl;
 import ru.otus.crm.service.DbServiceManagerImpl;
-import ru.otus.jdbc.mapper.EntityClassMetaData;
-import ru.otus.jdbc.mapper.EntitySQLMetaData;
+import ru.otus.jdbc.metadata.EntityClassMetaData;
+import ru.otus.jdbc.metadata.EntityClassMetaDataImpl;
+import ru.otus.jdbc.query.EntitySQLMetaData;
 import ru.otus.jdbc.mapper.DataTemplateJdbc;
+import ru.otus.jdbc.query.EntitySQLMetaDataImpl;
 
 import javax.sql.DataSource;
 
@@ -31,8 +33,8 @@ public class HomeWork {
         var dbExecutor = new DbExecutorImpl();
 
 // Работа с клиентом
-        EntityClassMetaData entityClassMetaDataClient; // = new EntityClassMetaDataImpl();
-        EntitySQLMetaData entitySQLMetaDataClient = null; //= new EntitySQLMetaDataImpl(entityClassMetaDataClient);
+        EntityClassMetaData<Client> entityClassMetaDataClient = new EntityClassMetaDataImpl<>(Client.class);
+        EntitySQLMetaData entitySQLMetaDataClient = new EntitySQLMetaDataImpl(entityClassMetaDataClient);
         var dataTemplateClient = new DataTemplateJdbc<Client>(dbExecutor, entitySQLMetaDataClient); //реализация DataTemplate, универсальная
 
 // Код дальше должен остаться
@@ -46,8 +48,8 @@ public class HomeWork {
 
 // Сделайте тоже самое с классом Manager (для него надо сделать свою таблицу)
 
-        EntityClassMetaData entityClassMetaDataManager; // = new EntityClassMetaDataImpl();
-        EntitySQLMetaData entitySQLMetaDataManager = null; //= new EntitySQLMetaDataImpl(entityClassMetaDataManager);
+        EntityClassMetaData<Manager> entityClassMetaDataManager = new EntityClassMetaDataImpl<>(Manager.class);
+        EntitySQLMetaData entitySQLMetaDataManager = new EntitySQLMetaDataImpl(entityClassMetaDataManager);
         var dataTemplateManager = new DataTemplateJdbc<Manager>(dbExecutor, entitySQLMetaDataManager);
 
         var dbServiceManager = new DbServiceManagerImpl(transactionRunner, dataTemplateManager);
