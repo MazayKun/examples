@@ -1,0 +1,93 @@
+rootProject.name = 'otusJava'
+include 'L01-gradle'
+
+include 'L02-gradle2'
+include 'L02-gradle2-libApi'
+include 'L02-gradle2-libApiUse'
+
+include 'L03-qa'
+include 'L04-generics'
+include 'L05-collections'
+include 'L06-annotations'
+
+include 'L08-gc:demo'
+include 'L08-gc:homework'
+
+//include 'L09-docker'
+
+include 'L10-byteCodes'
+
+include 'L11-java8'
+
+include 'L12-solid'
+include 'L13-creationalPatterns'
+include 'L14-behavioralPatterns'
+
+include 'L15-structuralPatterns:demo'
+include 'L15-structuralPatterns:homework'
+
+include 'L16-io:demo'
+include 'L16-io:homework'
+
+include 'L17-nio-logging'
+
+include 'L18-jdbc:demo'
+include 'L18-jdbc:homework'
+
+include 'L20-hibernate'
+
+include 'L21-jpql:class-demo'
+include 'L21-jpql:homework-template'
+
+include 'L23-cache'
+
+include 'L24-noSQL:mongo-db-demo'
+include 'L24-noSQL:mongo-db-reactive-demo'
+include 'L24-noSQL:neo4j-demo'
+include 'L24-noSQL:redis-demo'
+include 'L24-noSQL:cassandra-demo'
+
+include 'L25-webServer'
+
+include 'L26-di:class-demo'
+include 'L26-di:homework-template'
+
+include 'L27-springBootMvc'
+
+include 'L28-websocket:websocket'
+include 'L28-websocket:messager'
+include 'L28-websocket:messager-starter'
+include 'L28-websocket:application'
+
+include 'L29-springDataJdbc'
+
+include 'L30-threads'
+include 'L31-JMM'
+include 'L32-executors'
+
+
+include 'L33-concurrentCollections:ConcurrentCollections'
+include 'L33-concurrentCollections:QueueDemo'
+
+include 'L34-multiprocess:processes-demo'
+include 'L34-multiprocess:sockets-demo'
+include 'L34-multiprocess:rmi-demo'
+include 'L34-multiprocess:grpc-demo'
+
+
+include 'L35-rabbitMQ:allServicesModels'
+include 'L35-rabbitMQ:approvalService'
+include 'L35-rabbitMQ:mainService'
+
+include 'L36-NIO'
+include 'L37-netty'
+
+include 'L38-webflux:source'
+include 'L38-webflux:processor'
+include 'L38-webflux:client'
+
+include 'L38-webflux-chat:client-service'
+include 'L38-webflux-chat:datastore-service'
+
+include 'L39-kafka:consumer'
+include 'L39-kafka:producer'
