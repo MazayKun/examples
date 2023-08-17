@@ -1,6 +1,4 @@
-package ru.otus.jdbc.query;
-
-import ru.otus.jdbc.metadata.EntityClassMetaData;
+package ru.otus.jdbc.mapper;
 
 import java.util.StringJoiner;
 
@@ -20,11 +18,13 @@ public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData<T> {
                 + " where "
                 + entityClassMetaData.getName() + '.' + entityClassMetaData.getIdField().getName()
                 + " = ?;";
+        StringJoiner fieldNamesSequence = new StringJoiner(", ", "(", ")");
         StringJoiner valuesSequence = new StringJoiner(", ", "(", ");");
-        for(var field : entityClassMetaData.getAllFields()) {
-            valuesSequence.add(field.getName());
+        for(var field : entityClassMetaData.getFieldsWithoutId()) {
+            fieldNamesSequence.add(field.getName());
+            valuesSequence.add("?");
         }
-        this.insert = "insert into " + entityClassMetaData.getName() + " values " + valuesSequence;
+        this.insert = "insert into " + entityClassMetaData.getName() + fieldNamesSequence + " values " + valuesSequence;
         StringJoiner setSequence = new StringJoiner(", ");
         for(var field : entityClassMetaData.getFieldsWithoutId()) {
             setSequence.add(entityClassMetaData.getName() + '.' + field.getName() + " = ?");

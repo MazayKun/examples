@@ -1,6 +1,6 @@
-package ru.otus.jdbc.query;
+package ru.otus.jdbc.mapper;
 
-import ru.otus.jdbc.metadata.EntityClassMetaData;
+import ru.otus.jdbc.mapper.EntityClassMetaData;
 
 /**
  * Создает SQL - запросы

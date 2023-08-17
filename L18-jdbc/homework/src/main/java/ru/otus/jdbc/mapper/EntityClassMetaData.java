@@ -1,4 +1,4 @@
-package ru.otus.jdbc.metadata;
+package ru.otus.jdbc.mapper;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

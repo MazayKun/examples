@@ -1,7 +1,7 @@
-package ru.otus.jdbc.metadata;
+package ru.otus.jdbc.mapper;
 
 import ru.otus.core.annotation.Id;
-import ru.otus.crm.model.Client;
+import ru.otus.jdbc.exception.ClassDataExtractionException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -24,7 +24,8 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
         this.allFields = new ArrayList<>(fieldsArray.length);
         this.fieldsWithoutId = new ArrayList<>(fieldsArray.length - 1);
         for(int i = 0; i < fieldsArray.length; i++) {
-            allFieldsTypes[i] = fieldsArray[i].getDeclaringClass();
+            fieldsArray[i].setAccessible(true);
+            allFieldsTypes[i] = fieldsArray[i].getType();
             allFields.add(fieldsArray[i]);
             if(fieldsArray[i].isAnnotationPresent(Id.class)) {
                 this.idField = fieldsArray[i];
@@ -32,11 +33,11 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
             }
             fieldsWithoutId.add(fieldsArray[i]);
         }
-        if(this.idField == null) throw new RuntimeException("Error during id field search");
+        if(this.idField == null) throw new ClassDataExtractionException("Error during id field search");
         try {
             this.constructor = className.getConstructor(allFieldsTypes);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Error during constructor search", e);
+            throw new ClassDataExtractionException("Error during constructor search", e);
         }
     }
 

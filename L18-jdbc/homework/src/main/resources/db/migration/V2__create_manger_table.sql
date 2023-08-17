@@ -1,4 +1,4 @@
-create table client
+create table if not exists manager
 (
     no   bigserial not null primary key,
     label varchar(50),

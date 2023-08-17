@@ -10,11 +10,11 @@ import ru.otus.crm.model.Client;
 import ru.otus.crm.model.Manager;
 import ru.otus.crm.service.DbServiceClientImpl;
 import ru.otus.crm.service.DbServiceManagerImpl;
-import ru.otus.jdbc.metadata.EntityClassMetaData;
-import ru.otus.jdbc.metadata.EntityClassMetaDataImpl;
-import ru.otus.jdbc.query.EntitySQLMetaData;
+import ru.otus.jdbc.mapper.EntityClassMetaData;
+import ru.otus.jdbc.mapper.EntityClassMetaDataImpl;
+import ru.otus.jdbc.mapper.EntitySQLMetaData;
 import ru.otus.jdbc.mapper.DataTemplateJdbc;
-import ru.otus.jdbc.query.EntitySQLMetaDataImpl;
+import ru.otus.jdbc.mapper.EntitySQLMetaDataImpl;
 
 import javax.sql.DataSource;
 
@@ -45,7 +45,7 @@ public class HomeWork {
         var clientSecondSelected = dbServiceClient.getClient(clientSecond.getId())
                 .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecond.getId()));
         log.info("clientSecondSelected:{}", clientSecondSelected);
-
+        dbServiceClient.findAll();
 // Сделайте тоже самое с классом Manager (для него надо сделать свою таблицу)
 
         EntityClassMetaData<Manager> entityClassMetaDataManager = new EntityClassMetaDataImpl<>(Manager.class);
@@ -59,6 +59,7 @@ public class HomeWork {
         var managerSecondSelected = dbServiceManager.getManager(managerSecond.getNo())
                 .orElseThrow(() -> new RuntimeException("Manager not found, id:" + managerSecond.getNo()));
         log.info("managerSecondSelected:{}", managerSecondSelected);
+        dbServiceManager.findAll();
     }
 
     private static void flywayMigrations(DataSource dataSource) {
