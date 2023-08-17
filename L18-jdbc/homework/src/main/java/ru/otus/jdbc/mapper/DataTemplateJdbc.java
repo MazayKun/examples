@@ -32,7 +32,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
         this.mapper = rs -> {
             List<Field> allFields = entitySQLMetaData.getEntityClassMetaData().getAllFields();
             Object[] fieldsValues = new Object[allFields.size()];
-            for(int i = 0; i < allFields.size(); i++) {
+            for (int i = 0; i < allFields.size(); i++) {
                 try {
                     fieldsValues[i] = rs.getObject(i + 1);
                 } catch (SQLException e) {
@@ -92,7 +92,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
     private List<Object> extractFieldsWithoutId(T entity) {
         List<Field> fields = entitySQLMetaData.getEntityClassMetaData().getFieldsWithoutId();
         List<Object> fieldsValues = new ArrayList<>(fields.size() + 1);
-        for(var field : fields) {
+        for (var field : fields) {
             try {
                 fieldsValues.add(field.get(entity));
             } catch (IllegalAccessException e) {

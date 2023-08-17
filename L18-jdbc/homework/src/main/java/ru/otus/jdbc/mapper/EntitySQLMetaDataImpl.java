@@ -20,13 +20,13 @@ public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData<T> {
                 + " = ?;";
         StringJoiner fieldNamesSequence = new StringJoiner(", ", "(", ")");
         StringJoiner valuesSequence = new StringJoiner(", ", "(", ");");
-        for(var field : entityClassMetaData.getFieldsWithoutId()) {
+        for (var field : entityClassMetaData.getFieldsWithoutId()) {
             fieldNamesSequence.add(field.getName());
             valuesSequence.add("?");
         }
         this.insert = "insert into " + entityClassMetaData.getName() + fieldNamesSequence + " values " + valuesSequence;
         StringJoiner setSequence = new StringJoiner(", ");
-        for(var field : entityClassMetaData.getFieldsWithoutId()) {
+        for (var field : entityClassMetaData.getFieldsWithoutId()) {
             setSequence.add(entityClassMetaData.getName() + '.' + field.getName() + " = ?");
         }
         this.updateById = "update "

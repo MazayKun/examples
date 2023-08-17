@@ -23,17 +23,17 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
         Class<?>[] allFieldsTypes = new Class[fieldsArray.length];
         this.allFields = new ArrayList<>(fieldsArray.length);
         this.fieldsWithoutId = new ArrayList<>(fieldsArray.length - 1);
-        for(int i = 0; i < fieldsArray.length; i++) {
+        for (int i = 0; i < fieldsArray.length; i++) {
             fieldsArray[i].setAccessible(true);
             allFieldsTypes[i] = fieldsArray[i].getType();
             allFields.add(fieldsArray[i]);
-            if(fieldsArray[i].isAnnotationPresent(Id.class)) {
+            if (fieldsArray[i].isAnnotationPresent(Id.class)) {
                 this.idField = fieldsArray[i];
                 continue;
             }
             fieldsWithoutId.add(fieldsArray[i]);
         }
-        if(this.idField == null) throw new ClassDataExtractionException("Error during id field search");
+        if (this.idField == null) throw new ClassDataExtractionException("Error during id field search");
         try {
             this.constructor = className.getConstructor(allFieldsTypes);
         } catch (NoSuchMethodException e) {
