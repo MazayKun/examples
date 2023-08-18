@@ -17,17 +17,20 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
     private final List<Field> fieldsWithoutId;
     private Field idField;
 
-    public EntityClassMetaDataImpl(Class<T> className) {
-        tableName = className.getSimpleName().toLowerCase(Locale.ROOT);
-        Field[] fieldsArray = className.getDeclaredFields();
+    public EntityClassMetaDataImpl(Class<T> clazz) {
+        tableName = clazz.getSimpleName().toLowerCase(Locale.ROOT);
+        Field[] fieldsArray = clazz.getDeclaredFields();
         Class<?>[] allFieldsTypes = new Class[fieldsArray.length];
         this.allFields = new ArrayList<>(fieldsArray.length);
         this.fieldsWithoutId = new ArrayList<>(fieldsArray.length - 1);
+        boolean idFound = false;
         for (int i = 0; i < fieldsArray.length; i++) {
             fieldsArray[i].setAccessible(true);
             allFieldsTypes[i] = fieldsArray[i].getType();
             allFields.add(fieldsArray[i]);
             if (fieldsArray[i].isAnnotationPresent(Id.class)) {
+                if(idFound) throw new ClassDataExtractionException("Two id fields found for entity " + clazz);
+                idFound = true;
                 this.idField = fieldsArray[i];
                 continue;
             }
@@ -35,7 +38,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
         }
         if (this.idField == null) throw new ClassDataExtractionException("Error during id field search");
         try {
-            this.constructor = className.getConstructor(allFieldsTypes);
+            this.constructor = clazz.getConstructor(allFieldsTypes);
         } catch (NoSuchMethodException e) {
             throw new ClassDataExtractionException("Error during constructor search", e);
         }
