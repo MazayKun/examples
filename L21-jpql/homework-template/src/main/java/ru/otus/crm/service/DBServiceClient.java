@@ -12,4 +12,6 @@ public interface DBServiceClient {
     Optional<Client> getClient(long id);
 
     List<Client> findAll();
+
+    void delete(Client client);
 }
