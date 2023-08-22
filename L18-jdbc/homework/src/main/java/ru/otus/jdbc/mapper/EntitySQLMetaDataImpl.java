@@ -27,7 +27,7 @@ public class EntitySQLMetaDataImpl<T> implements EntitySQLMetaData<T> {
         this.insert = "insert into " + entityClassMetaData.getName() + fieldNamesSequence + " values " + valuesSequence;
         StringJoiner setSequence = new StringJoiner(", ");
         for (var field : entityClassMetaData.getFieldsWithoutId()) {
-            setSequence.add(entityClassMetaData.getName() + '.' + field.getName() + " = ?");
+            setSequence.add(field.getName() + " = ?");
         }
         this.updateById = "update "
                 + entityClassMetaData.getName()

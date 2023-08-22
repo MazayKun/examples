@@ -26,11 +26,11 @@ public class DbServiceClientImpl implements DBServiceClient {
             if (client.getId() == null) {
                 var clientId = dataTemplate.insert(connection, client);
                 var createdClient = new Client(clientId, client.getName());
-                log.info("created client: {}", createdClient);
+                //log.info("created client: {}", createdClient);
                 return createdClient;
             }
             dataTemplate.update(connection, client);
-            log.info("updated client: {}", client);
+            //log.info("updated client: {}", client);
             return client;
         });
     }
@@ -39,7 +39,7 @@ public class DbServiceClientImpl implements DBServiceClient {
     public Optional<Client> getClient(long id) {
         return transactionRunner.doInTransaction(connection -> {
             var clientOptional = dataTemplate.findById(connection, id);
-            log.info("client: {}", clientOptional);
+            //log.info("client: {}", clientOptional);
             return clientOptional;
         });
     }
@@ -48,7 +48,7 @@ public class DbServiceClientImpl implements DBServiceClient {
     public List<Client> findAll() {
         return transactionRunner.doInTransaction(connection -> {
             var clientList = dataTemplate.findAll(connection);
-            log.info("clientList:{}", clientList);
+            //log.info("clientList:{}", clientList);
             return clientList;
        });
     }
