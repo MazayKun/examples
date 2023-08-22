@@ -2,6 +2,7 @@ package ru.otus.jdbc.mapper;
 
 import ru.otus.core.repository.DataTemplate;
 import ru.otus.core.repository.executor.DbExecutor;
+import ru.otus.jdbc.cache.ResultCache;
 import ru.otus.jdbc.exception.EntityDataExtractionException;
 import ru.otus.jdbc.exception.EntityInstantiationException;
 
@@ -21,6 +22,8 @@ import java.util.function.Function;
  */
 @SuppressWarnings("unchcked")
 public class DataTemplateJdbc<T> implements DataTemplate<T> {
+
+    private final ResultCache<T> resultCache = new ResultCache<>(7);
 
     private final DbExecutor dbExecutor;
     private final EntitySQLMetaData<T> entitySQLMetaData;
@@ -49,11 +52,12 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
 
     @Override
     public Optional<T> findById(Connection connection, long id) {
-        return dbExecutor.executeSelect(
+        return resultCache.addIfAbsent(id, idToSearch -> dbExecutor.executeSelect(
                 connection,
                 entitySQLMetaData.getSelectByIdSql(),
-                List.of(id),
-                mapper);
+                List.of(idToSearch),
+                mapper)
+        );
     }
 
     @Override
@@ -82,11 +86,12 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
             throw new EntityDataExtractionException(entitySQLMetaData.getEntityClassMetaData().getIdField(), entity, e);
         }
         List<Object> fieldsValues = extractFieldsWithoutId(entity);
-        fieldsValues.add(0, idFieldValue);
+        fieldsValues.add(idFieldValue);
         dbExecutor.executeStatement(
                 connection,
                 entitySQLMetaData.getUpdateSql(),
                 fieldsValues);
+        resultCache.updateIfExist((Long)idFieldValue, entity);
     }
 
     private List<Object> extractFieldsWithoutId(T entity) {
