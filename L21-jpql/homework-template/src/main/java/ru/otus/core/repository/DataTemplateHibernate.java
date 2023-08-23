@@ -44,4 +44,9 @@ public class DataTemplateHibernate<T> implements DataTemplate<T> {
     public void update(Session session, T object) {
         session.merge(object);
     }
+
+    @Override
+    public void delete(Session session, T object) {
+        session.delete(object);
+    }
 }

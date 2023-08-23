@@ -52,4 +52,13 @@ public class DbServiceClientImpl implements DBServiceClient {
             return clientList;
        });
     }
+
+    @Override
+    public void delete(Client client) {
+        transactionManager.doInTransaction(session -> {
+            log.info("delete client:{}", client);
+            clientDataTemplate.delete(session, client);
+            return client;
+        });
+    }
 }
