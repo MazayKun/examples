@@ -5,15 +5,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 @Entity
 @Table(name = "client")
@@ -32,7 +29,17 @@ public class Client implements Cloneable {
     private Address address;
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private Set<Phone> phones = new HashSet<>();
+    private List<Phone> phones = new ArrayList<>();
+
+    public Client(Long id, String name, Address address, List<Phone> phones) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        for(Phone phone : phones) {
+            phone.setClient(this);
+        }
+        this.phones = phones;
+    }
 
     public void addPhone(Phone phone) {
         phones.add(phone);
@@ -52,7 +59,7 @@ public class Client implements Cloneable {
         clone.setAddress(this.address.clone());
         clone.setPhones(this.getPhones().stream()
                 .map(phone -> phone.clone(clone))
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toList()));
         return clone;
     }
 }

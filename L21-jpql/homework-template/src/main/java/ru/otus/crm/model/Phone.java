@@ -1,7 +1,6 @@
 package ru.otus.crm.model;
 
 import lombok.*;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 
@@ -26,6 +25,11 @@ public class Phone {
     private Client client;
 
     public Phone(String number) {
+        this.number = number;
+    }
+
+    public Phone(Long id, String number) {
+        this.id = id;
         this.number = number;
     }
 
