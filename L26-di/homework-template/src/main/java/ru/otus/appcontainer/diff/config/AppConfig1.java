@@ -10,7 +10,7 @@ import ru.otus.services.IOServiceStreams;
 @AppComponentsContainerConfig(order = 1)
 public class AppConfig1 {
     @AppComponent(order = 0, name = "equationPreparer")
-    public EquationPreparer equationPreparer(){
+    public EquationPreparer equationPreparer() {
         return new EquationPreparerImpl();
     }
 

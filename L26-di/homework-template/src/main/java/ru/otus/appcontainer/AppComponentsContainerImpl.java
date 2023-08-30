@@ -18,6 +18,7 @@ import java.util.*;
 public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private static final String THIS_PACKAGE_SUFFIX;
+
     static {
         String packageName = AppComponentsContainerImpl.class.getPackageName();
         THIS_PACKAGE_SUFFIX = packageName.substring(packageName.lastIndexOf('.') + 1);
@@ -41,21 +42,21 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(Class<C> componentClass) {
-        C result = (C)appComponentsByName.get(
+        C result = (C) appComponentsByName.get(
                 getBeanNameFromType(componentClass)
         );
-        if(result == null) {
+        if (result == null) {
             for (Object appComponent : appComponents) {
                 if (componentClass.isInstance(appComponent)) {
-                    if(result == null) {
-                        result = (C)appComponent;
-                    }else {
+                    if (result == null) {
+                        result = (C) appComponent;
+                    } else {
                         throw new BeanCollisionException(componentClass);
                     }
                 }
             }
         }
-        if(result == null) {
+        if (result == null) {
             throw new NoBeanFoundException(componentClass);
         }
         return result;
@@ -64,8 +65,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     @SuppressWarnings("unchecked")
     public <C> C getAppComponent(String componentName) {
-        C component = (C)appComponentsByName.get(componentName);
-        if(component == null) {
+        C component = (C) appComponentsByName.get(componentName);
+        if (component == null) {
             throw new NoBeanFoundException(componentName);
         }
         return component;
@@ -74,11 +75,11 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     private void processBasePackage(ContextInitInfo contextInitInfo) {
         try {
             Queue<Class<?>> potentialBeans = contextInitInfo.potentialBeans;
-            if(potentialBeans == null) {
+            if (potentialBeans == null) {
                 potentialBeans = new LinkedList<>();
             }
-            if(contextInitInfo.packagesToScan != null) {
-                for(String packageToScan : contextInitInfo.packagesToScan) {
+            if (contextInitInfo.packagesToScan != null) {
+                for (String packageToScan : contextInitInfo.packagesToScan) {
                     enrichPotentialBeansQueueWithAllAdjacentClasses(packageToScan, potentialBeans);
                 }
             }
@@ -97,25 +98,25 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
         String currentPackageName;
         String currentFileName;
-        while((currentPackageName = packagesToProcess.poll()) != null) {
+        while ((currentPackageName = packagesToProcess.poll()) != null) {
 
             URL currentPackageResource = ClassLoader.getSystemClassLoader()
                     .getResource(
                             currentPackageName.replace('.', '/')
                     );
-            if(currentPackageResource == null) {
+            if (currentPackageResource == null) {
                 throw new PackageNotFoundException(currentPackageName);
             }
             File currentPackage = new File(currentPackageResource.toURI());
 
-            for(File file : currentPackage.listFiles()){
+            for (File file : currentPackage.listFiles()) {
                 currentFileName = file.getName();
-                if(currentFileName.endsWith(".class")) {
+                if (currentFileName.endsWith(".class")) {
                     potentialBeans.add(
                             Class.forName(currentPackageName + '.' + currentFileName.substring(0, currentFileName.lastIndexOf(".")))
                     );
-                }else{
-                    if(currentFileName.equals(THIS_PACKAGE_SUFFIX)) continue;
+                } else {
+                    if (currentFileName.equals(THIS_PACKAGE_SUFFIX)) continue;
                     packagesToProcess.add(currentPackageName + '.' + currentFileName);
                 }
             }
@@ -127,9 +128,9 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         Class<?> nextClass;
         List<OrderedNode<Method>> currConfigMethods;
         AppComponentsContainerConfig configAnnotation;
-        while((nextClass = potentialBeans.poll()) != null) {
+        while ((nextClass = potentialBeans.poll()) != null) {
             configAnnotation = nextClass.getAnnotation(AppComponentsContainerConfig.class);
-            if(configAnnotation != null) {
+            if (configAnnotation != null) {
                 currConfigMethods = new ArrayList<>();
                 enrichListWithFactoryMethodsFromConfig(nextClass, currConfigMethods);
                 currConfigMethods.sort(OrderedNode::compareTo);
@@ -139,8 +140,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         factoryMethods.sort(OrderedNode::compareTo);
         Method firstMethod;
         Object configInstance;
-        for(OrderedNode<List<OrderedNode<Method>>> config : factoryMethods) {
-            if(config.data.isEmpty()) {
+        for (OrderedNode<List<OrderedNode<Method>>> config : factoryMethods) {
+            if (config.data.isEmpty()) {
                 continue;
             }
             firstMethod = config.data.get(0).data;
@@ -152,7 +153,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new BeanInstantiationException(firstMethod.getDeclaringClass());
             }
-            for(OrderedNode<Method> factoryMethod : config.data) {
+            for (OrderedNode<Method> factoryMethod : config.data) {
                 try {
                     enrichContextWithSingleBean(factoryMethod.data, configInstance);
                 } catch (InvocationTargetException | IllegalAccessException e) {
@@ -165,7 +166,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     private void enrichContextWithSingleBean(Method factoryMethod, Object configInstance) throws InvocationTargetException, IllegalAccessException {
         Class<?>[] parametersTypes = factoryMethod.getParameterTypes();
         Parameter[] parametersInfo = factoryMethod.getParameters();
-        if(parametersInfo.length != parametersTypes.length) {
+        if (parametersInfo.length != parametersTypes.length) {
             throw new RuntimeException("Factory method " + factoryMethod.getName()
                     + " has bad parameters info " + Arrays.toString(parametersInfo)
                     + ", " + Arrays.toString(parametersTypes)
@@ -173,9 +174,9 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         }
         Object[] factoryMethodArgs = new Object[parametersInfo.length];
         Object currArg;
-        for(int i = 0; i < factoryMethodArgs.length; i++) {
+        for (int i = 0; i < factoryMethodArgs.length; i++) {
             currArg = appComponentsByName.get(parametersInfo[i].getName());
-            if(currArg == null) {
+            if (currArg == null) {
                 currArg = getAppComponent(parametersTypes[i]);
             }
             factoryMethodArgs[i] = currArg;
@@ -186,7 +187,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 factoryMethod.getAnnotation(AppComponent.class).name(),
                 newBean
         );
-        if(result != null) {
+        if (result != null) {
             throw new BeanCollisionException(factoryMethod.getAnnotation(AppComponent.class).name());
         }
     }
@@ -201,14 +202,14 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         AppComponent appComponent;
         for (Method method : configClass.getMethods()) {
             appComponent = method.getAnnotation(AppComponent.class);
-            if(appComponent != null) {
+            if (appComponent != null) {
                 storage.add(new OrderedNode<>(appComponent.order(), method));
             }
         }
     }
 
     private ContextInitInfo getPackageNameForScan(Class<?>... configClasses) {
-        if(configClasses.length == 0) {
+        if (configClasses.length == 0) {
             throw new IllegalArgumentException("Required at least one config class");
         }
         AppComponentsContainerConfig configAnnotation;
@@ -221,8 +222,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
             if (packageScanAnnotation == null && configAnnotation == null) {
                 throw new IllegalArgumentException(String.format("Given class is not config %s", configClass.getName()));
             }
-            if(packageScanAnnotation != null) {
-                if(packagesToScan == null) packagesToScan = new ArrayList<>();
+            if (packageScanAnnotation != null) {
+                if (packagesToScan == null) packagesToScan = new ArrayList<>();
                 if (packageScanAnnotation.path().equals("")) {
                     packagesToScan.add(configClass.getPackageName());
                     continue;
@@ -230,7 +231,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 packagesToScan.add(packageScanAnnotation.path());
                 continue;
             }
-            if(potentialBeans == null) potentialBeans = new LinkedList<>();
+            if (potentialBeans == null) potentialBeans = new LinkedList<>();
             potentialBeans.add(configClass);
         }
         return new ContextInitInfo(potentialBeans, packagesToScan);
