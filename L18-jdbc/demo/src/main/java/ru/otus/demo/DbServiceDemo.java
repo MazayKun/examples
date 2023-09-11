@@ -34,25 +34,25 @@ public class DbServiceDemo {
         var clientSecond = dbServiceClient.saveClient(new Client("dbServiceSecond"));
         var clientSecondSelected = dbServiceClient.getClient(clientSecond.getId())
                 .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecond.getId()));
-        log.info("clientSecondSelected:{}", clientSecondSelected);
+        //log.info("clientSecondSelected:{}", clientSecondSelected);
 ///
         dbServiceClient.saveClient(new Client(clientSecondSelected.getId(), "dbServiceSecondUpdated"));
         var clientUpdated = dbServiceClient.getClient(clientSecondSelected.getId())
                 .orElseThrow(() -> new RuntimeException("Client not found, id:" + clientSecondSelected.getId()));
-        log.info("clientUpdated:{}", clientUpdated);
+        //log.info("clientUpdated:{}", clientUpdated);
 
-        log.info("All clients");
-        dbServiceClient.findAll().forEach(client -> log.info("client:{}", client));
+        //log.info("All clients");
+        dbServiceClient.findAll().forEach(client -> {});//log.info("client:{}", client));
     }
 
     private static void flywayMigrations(DataSource dataSource) {
-        log.info("db migration started...");
+        //log.info("db migration started...");
         var flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:/db/migration")
                 .load();
         flyway.migrate();
-        log.info("db migration finished.");
-        log.info("***");
+        //log.info("db migration finished.");
+        //log.info("***");
     }
 }
