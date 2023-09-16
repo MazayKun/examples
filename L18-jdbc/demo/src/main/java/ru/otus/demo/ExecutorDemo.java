@@ -27,7 +27,7 @@ public class ExecutorDemo {
             var executor = new DbExecutorImpl();
             var clientId = executor.executeStatement(connection, "insert into client(name) values (?)",
                     Collections.singletonList("testUserName"));
-            log.info("created client:{}", clientId);
+            //log.info("created client:{}", clientId);
             connection.commit();
 
             var client = executor.executeSelect(connection, "select id, name from client where id  = ?",
@@ -41,18 +41,18 @@ public class ExecutorDemo {
                         }
                         return null;
                     });
-            log.info("client:{}", client);
+            //log.info("client:{}", client);
         }
     }
 
     private static void flywayMigrations(DataSource dataSource) {
-        log.info("db migration started...");
+        //log.info("db migration started...");
         var flyway = Flyway.configure()
                 .dataSource(dataSource)
                 .locations("classpath:/db/migration")
                 .load();
         flyway.migrate();
-        log.info("db migration finished.");
-        log.info("***");
+        //log.info("db migration finished.");
+        //log.info("***");
     }
 }

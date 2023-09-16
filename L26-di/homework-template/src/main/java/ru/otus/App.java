@@ -2,9 +2,8 @@ package ru.otus;
 
 import ru.otus.appcontainer.AppComponentsContainerImpl;
 import ru.otus.appcontainer.api.AppComponentsContainer;
-import ru.otus.config.AppConfig;
+import ru.otus.appcontainer.api.PackageScan;
 import ru.otus.services.GameProcessor;
-import ru.otus.services.GameProcessorImpl;
 
 /*
 В классе AppComponentsContainerImpl реализовать обработку, полученной в конструкторе конфигурации,
@@ -20,6 +19,7 @@ import ru.otus.services.GameProcessorImpl;
 PS Приложение представляет собой тренажер таблицы умножения
 */
 
+@PackageScan
 public class App {
 
     public static void main(String[] args) throws Exception {
@@ -30,7 +30,7 @@ public class App {
         //AppComponentsContainer container = new AppComponentsContainerImpl("ru.otus.config");
 
         // Обязательный вариант
-        AppComponentsContainer container = new AppComponentsContainerImpl(AppConfig.class);
+        AppComponentsContainer container = new AppComponentsContainerImpl(App.class);
 
         // Приложение должно работать в каждом из указанных ниже вариантов
         GameProcessor gameProcessor = container.getAppComponent(GameProcessor.class);
